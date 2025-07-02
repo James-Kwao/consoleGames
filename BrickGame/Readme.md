@@ -45,7 +45,7 @@ cd BrickGame
 ### 2. Run the Game
 
 ```sh
-java -cp jline-3.30.0.jar BrickGame.java
+java -cp ../jline-3.30.0.jar BrickGame.java
 ```
 
 ---
