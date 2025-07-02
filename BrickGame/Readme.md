@@ -1,3 +1,11 @@
+## Preview
+
+<div style="display: flex; gap: 60px;">
+  <img src="preview/bricksgame1.png" alt="Screenshot 1" width="250"/>
+  <img src="preview/bricksgame2.png" alt="Screenshot 2" width="250"/>
+  <img src="preview/bricksgame3.png" alt="Screenshot 3" width="250"/>
+</div>
+
 # BrickGame
 
 **BrickGame** is a classic brick breaker arcade game implemented in Java for the command-line interface (CLI). It features colorful ASCII graphics, responsive real-time controls, score and life tracking, and adapts automatically to your terminal size. The game is ideal for running in terminal environments like Termux on Android, Linux, or macOS.
