@@ -48,7 +48,7 @@ _Replace `GameName.java` with the actual file name of the game you want to play 
 
 ## Contributing
 
-Contributions are welcome! If you have a console game you’d like to add, or improvements to e°}◇7♧xisting ones, please open a pull request or issue.
+Contributions are welcome! If you have a console game you’d like to add, or improvements to existing ones, please open a pull request or issue.
 
 1. Fork the repository
 2. Create your game (preferably in its own Java file or folder)
