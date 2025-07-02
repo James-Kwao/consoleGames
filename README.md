@@ -38,7 +38,12 @@ _Replace `GameName.java` with the actual file name of the game you want to play 
 
 ## List of Games
 
-- [Bricks Game](https://github.com/James-Kwao/consoleGames/tree/master/BrickGame)
+- ## [Bricks Game](https://github.com/James-Kwao/consoleGames/tree/master/BrickGame)
+<div style="display: flex; gap: 10px;">
+  <img src="BrickGame/preview/bricksgame1.png" alt="Screenshot 1" width="250"/>
+  <img src="BrickGame/preview/bricksgame2.png" alt="Screenshot 2" width="250"/>
+  <img src="BrickGame/preview/bricksgame3.png" alt="Screenshot 3" width="250"/>
+</div>
 - _...and more coming soon!_
 
 ## Contributing
