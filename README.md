@@ -34,18 +34,16 @@ This project brings together a variety of console games, showcasing different pr
     java GameName
     ```
 
-_Replace `GameName.java` with the actual file name of the game you want to play._
+_Replace `GameName.java` with the actual file name of the game you want to play or check the game's Readme file for more details_
 
 ## List of Games
 
-- [Game 1: Name/Description] (add details as you add games)
-- [Game 2: Name/Description]
-- [Game 3: Name/Description]
+- [Bricks Game](https://github.com/James-Kwao/consoleGames/tree/master/BrickGame)
 - _...and more coming soon!_
 
 ## Contributing
 
-Contributions are welcome! If you have a console game you’d like to add, or improvements to existing ones, please open a pull request or issue.
+Contributions are welcome! If you have a console game you’d like to add, or improvements to e°}◇7♧xisting ones, please open a pull request or issue.
 
 1. Fork the repository
 2. Create your game (preferably in its own Java file or folder)
