@@ -34,14 +34,83 @@ git clone https://github.com/yourusername/BrickGame.git
 cd BrickGame
 ```
 
-### 2. Compile the Game
+### 2. Run the Game
 
 ```sh
-javac -cp ".:jline-3.25.0.jar" BrickGame.java
+java -cp jline-3.30.0.jar BrickGame.java
 ```
 
-### 3. Run the Game
+---
 
-```sh
-java -cp ".:jline-3.25.0.jar" BrickGame
-```
+## Controls
+
+| Key        | Action                              |
+|------------|-------------------------------------|
+| `A` or `a` | Move paddle left                    |
+| `L` or `l` | Move paddle right                   |
+| `P` or `p` | Pause or resume the game            |
+| `R` or `r` | Restart the game (after game over)  |
+| `E` or `e` | Exit the game                       |
+
+---
+
+## How to Play
+
+- The goal is to break all the bricks by bouncing the ball off your paddle.
+- You have 3 lives. If you miss the ball, you lose a life.
+- Your score increases for each brick you break.
+- The game ends when you lose all your lives.
+- After game over, you can restart (`R`) or exit (`E`).
+
+---
+
+## Customization
+
+- **Brick Board Size:** Edit the numbers in `initBricks(int y, int x)` in `BrickGame.java` to change the brick layout.
+- **Paddle Size:** Modify the `padLen` variable for a longer or shorter paddle.
+- **Difficulty:** Adjust the `repeat`, `speedX`, or `speedY` variables to make the game faster or slower.
+
+---
+
+## Troubleshooting
+
+- **No input or display issues:** Ensure you’re using a compatible terminal and have the correct `jline` JAR in the directory.
+- **No Game Over banner:** Install `figlet` for a better "Game Over" display.
+- **Display glitches:** Maximize your terminal or restart the game after resizing.
+
+---
+
+## Code Structure
+
+- `BrickGame` — Main class containing game logic, rendering, and state management.
+- `ReadInput` — Handles real-time keyboard input using JLine 3.
+
+---
+
+## Contributing
+
+Contributions are welcome! Please fork the repository and submit a pull request for bug fixes, improvements, or new features.
+
+1. Fork this repository.
+2. Create a branch: \`git checkout -b feature/your-feature\`
+3. Commit your changes.
+4. Push to your fork: \`git push origin feature/your-feature\`
+5. Open a pull request.
+
+---
+
+## License
+
+This project is licensed under the MIT License.
+
+---
+
+## Acknowledgments
+
+- [JLine](https://github.com/jline/jline3) for advanced terminal input handling.
+- [figlet](http://www.figlet.org/) for ASCII art banners.
+- The open source community for inspiration.
+
+---
+
+**Enjoy BrickGame in your terminal! If you have suggestions or issues, feel free to open an issue or pull request.**
