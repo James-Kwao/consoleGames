@@ -62,7 +62,7 @@ public class BrickGame {
 		}
 		readInput();
 	    }
-	},0,repeat/3);
+	},0,repeat/4);
     }
 
     String getBoard(){
