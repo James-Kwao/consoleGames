@@ -167,7 +167,7 @@ public class BrickGame {
 		if(pauseGame) pauseGame = false;
 		if(!pauseGame && padX + padLen < WIDTH - 2)
 		   padX++;
-	break;
+		break;
 	    case 'e':
 	    case 'E':
 		exitGame();
@@ -266,7 +266,7 @@ class ReadInput {
 	try {
 	    h = terminal.getHeight();
 	}catch(Exception n){}
-	return h/2 + 10;
+	return h > 40? h/2 + 4 : h - 2;
     }
 
     static int width() {
