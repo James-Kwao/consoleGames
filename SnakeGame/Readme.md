@@ -83,22 +83,11 @@ Contributions are welcome! Please fork the repository and submit a pull request 
 
 ---
 
-## Example Screenshot
-
-```
-💙💙💙                         Your Score: 4
-#############################################
-#                                           #
-#              🐍    ⚡                     #
-#                                           #
-#############################################
-Enter 'Y' 'A' 'V' 'L' to move direction: l
-```
-
 ## License
 
 MIT License. See [LICENSE](../LICENSE) for details.
 
 ---
 
-**Enjoy playing Snake in your terminal!**
+**Enjoy SnakeGame in your terminal!
+If you have suggestions or issues, feel free to open an issue or pull request.**
