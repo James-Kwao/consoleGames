@@ -16,8 +16,8 @@ public class SnakeGame {
     private int snakeLength;
     private int foodX;
     private int foodY;
-    private int score;
-    private int life;
+    private int score = 0;
+    private int life = 3;
     private int repeatTime;
     private char direction, space;
     private Random random;
@@ -33,6 +33,7 @@ public class SnakeGame {
         snakeX = new int[(WIDTH * HEIGHT) - 2];
         snakeY = new int[(WIDTH * HEIGHT) - 2];
 	board = new char[HEIGHT-1][WIDTH-1];
+	System.out.println((int)board[10][10]);
 
 	initializeGame();
         random = new Random();
@@ -50,7 +51,7 @@ public class SnakeGame {
         for(int i=0; i < HEIGHT; i++){
 	    for(int a=0; a<WIDTH; a++){
 		if(i == 0) {
-		   if(a+l.length()+6 == WIDTH-1) {
+		   if(a + l.length() + 4 == WIDTH - 1) {
 		      sb.append(l);
 		      break;
 		   }
@@ -62,66 +63,125 @@ public class SnakeGame {
 		  else if(a == 0 || a == WIDTH - 1)
 		     sb.append("\u001B[35m#");
 		  else {
-		      if(snakeY[0] == i&&snakeX[0] == a) {
-                         sb.append("\u001B[32m");                                   space = snakeHead;                                        }
-		      else if(foodY == i && foodX == a) {
-			sb.append("\u001B[33m");
-			space = food;
-		      }
-		      else space = ' ';
-		      board[i][a] = space;
-		      sb.append(board[i][a]);
+		     boolean isSnake = false;
+		     for(int j = 0; j < snakeLength; j++) {
+			if(snakeY[j]==i && snakeX[j]==a) {
+			   sb.append("\u001B[32m");
+			   space = (j==0) ? snakeHead:snakeBody;
+			   isSnake = true;
+			   break;
+			}
+		     }
+		     if(!isSnake) {
+			if(foodY == i && foodX == a) {
+			  sb.append("\u001B[33m");
+			  space = food;
+			} else space = ' ';
+		     }
+		     board[i][a] = space;
+		     sb.append(board[i][a]);
 		  }
 		}
 	    }
 	    sb.append("\n");
         }
-        sb.append("Enter 'Y' 'A' 'V' 'L' to move direction: "+direction);
+	sb.append("Enter 'Y' 'A' 'V' 'L' to move direction: " + direction);
         return sb.toString();
     }
 
     private void initializeGame() {
 	snakeY[0] = HEIGHT/2;
 	snakeX[0] = WIDTH/2;
-	snakeLength = 2;
+	snakeLength = 3;
         gameOver = isPause = false;
-	score = 0;
-        space = direction = ' ';                                   life = 3;
+        space = direction = ' ';
         repeatTime = 300;
 
-        for(int i = 1; i < HEIGHT; i++) {
-	    snakeX[i] = -1;
-	    snakeY[i] = -1;
+        for(int i = 1; i < snakeLength; i++) {
+	    snakeX[i] = snakeX[i-1]-1;
+	    snakeY[i] = snakeY[i-1];
         }
+    }
+
+    private void moveBody() {
+	for(int i=snakeLength; i>0; i--) {
+	   snakeX[i] = snakeX[i-1];
+	   snakeY[i] = snakeY[i-1];
+	}
     }
 
     private void generateFood() {
-        foodX = random.nextInt(1, WIDTH-1);
-        foodY = random.nextInt(2, HEIGHT-1);
-	if(board[foodY][foodX] == snakeBody) 
-	   generateFood();
-    }
+        boolean onSnake;
+        do {
+            foodX = random.nextInt(1, WIDTH - 1);
+            foodY = random.nextInt(2, HEIGHT - 1);
+            onSnake = false;
+            for(int i = 0; i < snakeLength; i++) {                        if(snakeX[i]==foodX && snakeY[i]==foodY) {
+		    onSnake = true;                                            break;                                                 }                                                      }                                                      } while (onSnake);                                     }
 
     private void updateSnake() {
-	if (snakeX[0] <= 0 || snakeX[0] >= WIDTH-1 ||
+	if(snakeX[0] <= 0 || snakeX[0] >= WIDTH-1 ||
 	       snakeY[0] < 2 || snakeY[0] >= HEIGHT-1) {
-	    gameOver = true;
-	    clear();
-	    System.out.println("\n\n\n\n\n\u001B[31m");
-	    try {
-		Process process = Runtime.getRuntime().exec(new String[] {"figlet","-ctf","slant", "G AM E\nOV ER\nYour Score:  " + String.valueOf(score)});
-		java.util.Scanner s = new java.util.Scanner(process.getInputStream()).useDelimiter("\\A");
-
-		System.out.println(s.hasNext()?s.next():"");
-		System.out.print("\u001B[33mR to restart or Q to exit: ");
-		} catch (Exception e) {}
-	    return;
+	    life--;
+	    if(life == 0) {
+                   gameOver = true;
+                   gameOverSequence("");
+                } else {
+                   gameOverSequence("You hit\nthe wall !");
+                   try{
+                      Thread.sleep(1000);
+                   }catch(Exception e){}
+                   initializeGame();
+                }
+                return;
 	}
-        if (snakeX[0] == foodX && snakeY[0] == foodY) {
+
+	if(snakeLength > 4)
+	for(int i = 1; i < snakeLength; i++) {                        if(snakeX[0]==snakeX[i]&&snakeY[0]==snakeY[i]) {
+                life--;
+                if(life == 0) {
+		   gameOver = true;
+		   gameOverSequence("");
+                } else {
+		   gameOverSequence("You bit\nyourself !");
+		   try{
+		      Thread.sleep(1000);
+		   }catch(Exception e){}
+		   initializeGame();
+		}
+		return;
+            }
+        }
+
+        if(snakeX[0] == foodX && snakeY[0] == foodY) {
             score++;
             snakeLength++;
             generateFood();
+	    if (score % 2 == 0 && repeatTime > 80) {
+                repeatTime -= 20;
+                changeSpeed();
+            }
         }
+    }
+
+    void gameOverSequence(String reason) {
+	String over = gameOver ? "G AM E\nOV ER\nYour Score:  " + String.valueOf(score) : reason;
+	clear();
+	try{
+	    Process process = Runtime.getRuntime()
+		.exec(new String[] {
+			"figlet","-ctf","slant", over});
+	    java.util.Scanner s = new java.util
+		    .Scanner(process.getInputStream())
+		    .useDelimiter("\\A");
+
+	    System.out.println(s.hasNext()?s.next():"");
+	    if(gameOver) {
+	      life = 3;
+	      score = 0;
+	      System.out.print("\u001B[33mR to restart or Q to exit: ");
+	    }
+	} catch (Exception e) {}
     }
 
     public void play() {
@@ -149,6 +209,8 @@ public class SnakeGame {
 	    case 'q':
 	    case 'Q':
 		clear();
+		gameLoop.cancel();
+		ReadInput.end();
 		System.exit(0);
 		break;
 	    case 'p':
@@ -159,14 +221,20 @@ public class SnakeGame {
 	    case 'R':
 		clear();
 		initializeGame();
+		generateFood();
 		break;
 	}
-	ReadInput.input = ' ';
+	ReadInput.input = ' '; 
 
-	if(direction == 'v' && !isPause) snakeY[0]++;
-	else if(direction == 'l' && !isPause) snakeX[0]++;
-	else if(direction == 'a' && !isPause) snakeX[0]--;
-	else if(direction == 'y' && !isPause) snakeY[0]--;
+	 if (!isPause && !gameOver) {
+            moveBody();
+            switch (direction) {
+                case 'l': snakeX[0]++; break;
+                case 'a': snakeX[0]--; break;
+                case 'y': snakeY[0]--; break;
+		case 'v': snakeY[0]++; break;
+	    }
+        }
     }
 
     void changeSpeed() {
@@ -184,7 +252,7 @@ public class SnakeGame {
 			updateSnake();
 		   }
 		}
-	   },0,repeatTime);                                
+	   },0,repeatTime); 
     }
 
     void clear(){
