@@ -182,11 +182,12 @@ public class SnakeGame {
 		    .Scanner(process.getInputStream())
 		    .useDelimiter("\\A");
 
+	    if(gameOver)System.out.print("\u001B[31m");
 	    System.out.println(s.hasNext()?s.next():"");
 	    if(gameOver) {
 	      life = 3;
 	      score = 0;
-	      System.out.print("\u001B[33mR to restart or Q to exit: "+ direction);
+	      System.out.print("\u001B[33mR to restart or Q to exit: ");
 	    }
 	} catch (Exception e) {}
     }
