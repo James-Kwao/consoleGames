@@ -70,6 +70,19 @@ Built with [JLine](https://github.com/jline/jline3) for smooth keyboard input an
 - The open source community for inspiration.
 
 ---
+
+## Contributing
+
+Contributions are welcome! Please fork the repository and submit a pull request for bug fixes, improvements, or new features.
+
+1. Fork this repository.
+2. Create a branch: \`git checkout -b feature/your-feature\`
+3. Commit your changes.
+4. Push to your fork: \`git push origin feature/your-feature\`
+5. Open a pull request.
+
+---
+
 ## Example Screenshot
 
 ```
