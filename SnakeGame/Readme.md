@@ -1,3 +1,12 @@
+# Preview 
+
+<div style="display: flex; gap: 60px;">
+    <img src="preview/snakeGame1.jpg" alt="Screenshot 1" width="260"/>
+    <img src="preview/snakeGame2.jpg" alt="Screenshot 2" width="260"/>
+    <img src="preview/snakeGame3.jpg" alt="Screenshot 3" width="260"/>
+    <img src="preview/snakeGame4.jpg" alt="Screenshot 4" width="260"/>
+</div>
+
 # SnakeGame
 
 A classic Snake game playable directly in your terminal!  
