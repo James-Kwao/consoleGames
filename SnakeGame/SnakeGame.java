@@ -116,8 +116,14 @@ public class SnakeGame {
             foodX = random.nextInt(1, WIDTH - 1);
             foodY = random.nextInt(2, HEIGHT - 1);
             onSnake = false;
-            for(int i = 0; i < snakeLength; i++) {                        if(snakeX[i]==foodX && snakeY[i]==foodY) {
-		    onSnake = true;                                            break;                                                 }                                                      }                                                      } while (onSnake);                                     }
+            for(int i = 0; i < snakeLength; i++) {
+		if(snakeX[i]==foodX && snakeY[i]==foodY) {
+		    onSnake = true;
+		    break;
+		}
+	    }
+	} while (onSnake);
+    }
 
     private void updateSnake() {
 	if(snakeX[0] <= 0 || snakeX[0] >= WIDTH-1 ||
@@ -137,7 +143,8 @@ public class SnakeGame {
 	}
 
 	if(snakeLength > 4)
-	for(int i = 1; i < snakeLength; i++) {                        if(snakeX[0]==snakeX[i]&&snakeY[0]==snakeY[i]) {
+	for(int i = 1; i < snakeLength; i++) {
+	    if(snakeX[0]==snakeX[i]&&snakeY[0]==snakeY[i]) {
                 life--;
                 if(life == 0) {
 		   gameOver = true;
@@ -157,7 +164,7 @@ public class SnakeGame {
             score++;
             snakeLength++;
             generateFood();
-	    if (score % 2 == 0 && repeatTime > 80) {
+	    if (score % 5 == 0 && repeatTime > 60) {
                 repeatTime -= 20;
                 changeSpeed();
             }
@@ -179,7 +186,7 @@ public class SnakeGame {
 	    if(gameOver) {
 	      life = 3;
 	      score = 0;
-	      System.out.print("\u001B[33mR to restart or Q to exit: ");
+	      System.out.print("\u001B[33mR to restart or Q to exit: "+ direction);
 	    }
 	} catch (Exception e) {}
     }
@@ -259,7 +266,8 @@ public class SnakeGame {
         try {
             new ProcessBuilder("clear")
                     .inheritIO().start().waitFor();
-        }catch(Exception n) {}                                      }
+        }catch(Exception n) {}
+    }
 
     public static void main(String[] args) {
         new SnakeGame();
@@ -268,7 +276,8 @@ public class SnakeGame {
 
 class ReadInput {
     static Thread thread;
-    static Terminal terminal;                                       static volatile char input;
+    static Terminal terminal;
+    static volatile char input;
     static volatile boolean run = true;
 
     public static void start() {
@@ -281,15 +290,17 @@ class ReadInput {
 	   }catch (Exception e){}
 	}
     }
-                                                                    public static void end() {
-        try {
+
+    public static void end() {
+	try {
             run = false;
-            if(terminal != null) terminal.close();                          if(thread != null) {                                                thread.interrupt();
-            }
-            thread = null;
-        }catch(Exception e){}
+            if(terminal != null) terminal.close();
+	    if(thread != null) thread.interrupt();
+	    thread = null;
+	}catch(Exception e){}
     }
-                                                                    private static void input() {
+
+    private static void input() {
         try {
             thread = new Thread(() -> {
                 try {
