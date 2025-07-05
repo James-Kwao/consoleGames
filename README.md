@@ -44,6 +44,16 @@ _Replace `GameName.java` with the actual file name of the game you want to play 
   <img src="BrickGame/preview/bricksgame2.png" alt="Screenshot 2" width="250"/>
   <img src="BrickGame/preview/bricksgame3.png" alt="Screenshot 3" width="250"/>
 </div>
+
+---
+
+- ## [Snake Game](https://github.com/James-Kwao/consoleGames/tree/master/SnakeGame)
+<div style="display: flex; gap: 10px;">
+    <img src="SnakeGame/preview/snakeGame1.jpg" alt="Screenshot 1" width="250"/>
+    <img src="SnakeGame/preview/snakeGame2.jpg" alt="Screenshot 2" width="250"/>
+    <img src="SnakeGame/preview/snakeGame3.jpg" alt="Screenshot 3" width="250"/>
+    <img src="SnakeGame/preview/snakeGame4.jpg" alt="Screenshot 4" width="250"/>
+</div>
 - _...and more coming soon!_
 
 ## Contributing

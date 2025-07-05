@@ -1,3 +1,12 @@
+# Preview 
+
+<div style="display: flex; gap: 60px;">
+    <img src="preview/snakeGame1.jpg" alt="Screenshot 1" width="260"/>
+    <img src="preview/snakeGame2.jpg" alt="Screenshot 2" width="260"/>
+    <img src="preview/snakeGame3.jpg" alt="Screenshot 3" width="260"/>
+    <img src="preview/snakeGame4.jpg" alt="Screenshot 4" width="260"/>
+</div>
+
 # SnakeGame
 
 A classic Snake game playable directly in your terminal!  
@@ -61,17 +70,18 @@ Built with [JLine](https://github.com/jline/jline3) for smooth keyboard input an
 - The open source community for inspiration.
 
 ---
-## Example Screenshot
 
-```
-💙💙💙                         Your Score: 4
-#############################################
-#                                           #
-#              🐍    ⚡                     #
-#                                           #
-#############################################
-Enter 'Y' 'A' 'V' 'L' to move direction: l
-```
+## Contributing
+
+Contributions are welcome! Please fork the repository and submit a pull request for bug fixes, improvements, or new features.
+
+1. Fork this repository.
+2. Create a branch: \`git checkout -b feature/your-feature\`
+3. Commit your changes.
+4. Push to your fork: \`git push origin feature/your-feature\`
+5. Open a pull request.
+
+---
 
 ## License
 
@@ -79,4 +89,5 @@ MIT License. See [LICENSE](../LICENSE) for details.
 
 ---
 
-**Enjoy playing Snake in your terminal!**
+**Enjoy SnakeGame in your terminal!
+If you have suggestions or issues, feel free to open an issue or pull request.**
