@@ -31,13 +31,12 @@ Built with [JLine](https://github.com/jline/jline3) for smooth keyboard input an
 
 2. **Compile the code**
    ```sh
-   javac -cp .:jline-terminal-3.x.jar:jline-reader-3.x.jar SnakeGame.java
+   javac -cp ../jline-terminal-3.30.0.jar SnakeGame.java
    ```
-   *(Replace `jline-terminal-3.x.jar` and `jline-reader-3.x.jar` with the actual filenames for your JLine jars.)*
 
 3. **Run the game**
    ```sh
-   java -cp .:jline-terminal-3.x.jar:jline-reader-3.x.jar SnakeGame
+   java -cp ../jline-terminal-3.30.0.jar SnakeGame
    ```
 
 4. **Controls**
@@ -51,9 +50,17 @@ Built with [JLine](https://github.com/jline/jline3) for smooth keyboard input an
 
 ## Notes
 
-- Make sure your terminal window is at least 30 rows by 62 columns for the best experience.
 - For Windows users: Running this game is best on WSL or a compatible terminal emulator.
 
+---                                                                   
+## Acknowledgments
+
+- [JLine](https://github.com/jline/jline3) for advanced terminal input
+ handling.
+- [figlet](http://www.figlet.org/) for ASCII art banners.
+- The open source community for inspiration.
+
+---
 ## Example Screenshot
 
 ```
