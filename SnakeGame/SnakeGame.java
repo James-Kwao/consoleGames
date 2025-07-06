@@ -5,7 +5,7 @@ import org.jline.reader.*;
 
 public class SnakeGame {
     private final char food = (char)9775;
-    private final char snakeBody = (char)9706;
+    private final char snakeBody = (char)8718;
     private final char snakeHead = (char)9865;
     private final char[][] board;
     private int WIDTH;
