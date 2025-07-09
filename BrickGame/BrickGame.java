@@ -56,7 +56,7 @@ public class BrickGame {
         timer2.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                if (WIDTH != ReadInput.width()) {
+                if (HEIGHT != ReadInput.height()) {
                     WIDTH = ReadInput.width();
                     HEIGHT = ReadInput.height();
                     padY = HEIGHT - 3;
