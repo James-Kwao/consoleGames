@@ -1,24 +1,35 @@
-import java.util.*;                                             import org.jline.terminal.*;                                    import org.jline.reader.*;
+import java.util.*;
+import org.jline.terminal.*;
+import org.jline.reader.*;
 
 /**                                                              * CarCrash is a console-based car driving game.
  * It uses the JLine library for terminal input and output handling.
  */
 public class CarCrash {
    private Timer gameLoop;
-   private int repeatTime = 250;
-   private int score,life,divider;
+   private final Random rand = new Random();
+   private int repeatTime = 400;
+   private int score,life,divider,max;
    private int HEIGHT,WIDTH;
    private boolean pauseGame,gameOver;
+   private Entity player;
+   private ArrayList<Entity> collisions = new ArrayList<>();
+   private char direction;
+   private String[] enemies = {"🐃","🐏","🐌","🐢","🦆","🦔","🐓","🐫","🐘","🐥","🦍","🦌"};
 
    public CarCrash() {
 	ReadInput.start();
 	clear();
 
 	HEIGHT = ReadInput.height();
-	WIDTH = ReadInput.width();
-	divider = (WIDTH/3)*2 - 5;
+	WIDTH = ReadInput.width()/2;
+	divider = (WIDTH/3)*2 - 2;
+	player = new Entity(rand.nextInt(1, divider), 1 ,"🚘");
+	if(player.x % 6 == 0) player.x++;
 	life = 3;
 
+	addEnemies();
+	ReadInput.input = ' ';
 	changeSpeed();
    }
 
@@ -26,37 +37,110 @@ public class CarCrash {
        StringBuilder sb = new StringBuilder();
        
        for(int i=0; i < HEIGHT; i++) {
-            for(int a=0; a<WIDTH; a++) {
-                  if(i == 0 || i == HEIGHT - 1)
-                     sb.append("\u001B[35m#");
-                  else if(a == 0 || a == WIDTH - 1)
-                     sb.append("\u001B[35m#");
-		  else {
-		     String s = "Remaining Live";
-		     int cur = infoX(s);
-		     char[] arr = s.toCharArray();
-		     sb.append("\u001B[34m");
-
-		     if(a == divider) sb.append("\u001B[35m#");
-		     else if(i == (HEIGHT - 1)/2 - 6 && 
-			a >= cur && a < cur+len(s)) {
-			sb.append(arr[a - cur]);
-		     }
-		     else if(i == (HEIGHT - 1)/2 - 5) {
-			s = "";
-			for(int y=0; y<life; y++) s += "♥️";
-			cur = infoX(s);
-                        if(a >= cur && a < cur+life) {
-			   sb.append("♥️");
-			}
-			else sb.append(" ");
-                     }
-		     else sb.append(" ");
-		  }
+	    int m = 0;
+	    for(int a=0; a<WIDTH; a++) {
+                if(i == 0 || i == HEIGHT - 1)
+		   sb.append("\u001B[35m##");
+		else if(a == 0 || a == WIDTH-1)
+		   sb.append("\u001B[35m##");
+		else if(player.x == a && player.y == i)
+		   sb.append(player.n);
+		else if(a == divider)
+		   sb.append("\u001B[35m🚧");
+		else if(a % 6 == 0 && a < divider)
+                   sb.append("\u001B[37m||");
+		else if(a < divider) {
+		   boolean drawn = false;
+		   for(Entity e : collisions) {
+		       if(e.x == a && e.y == i) {
+			  sb.append(e.n);
+			  drawn = true;
+			  break;
+		       }
+		   }
+		   if (!drawn)sb.append("  ");
+		}
+		else if((i >= HEIGHT/2 - 4 && 
+			i <= HEIGHT /2 + 4) && a > divider) {
+		   String s = "  Remaining life";
+		   int l = (len(s)%2 != 0?len(s+=" "):len(s));
+		   int cur = infoX(s);
+		   char[] arr = s.toCharArray();
+		   sb.append("\u001B[34m");
+		   if(i == HEIGHT/2-4 && a >= cur && a < cur+l/2) {
+		      sb.append(arr[a-cur+m++]);
+		      sb.append(arr[a-cur+m]);
+		   }
+		   else if(i == HEIGHT/2-3) {
+		      s = "";
+		      for(int o=0; o<life; o++) s += "💙";
+		      cur = infoX(s);
+		      if(a >= cur && a < cur+life) 
+			 sb.append("💙");
+		      else sb.append("  ");
+		   }
+		   else if(i == HEIGHT/2 + 3) {
+		      s = "  Your Score";
+		      l = (len(s)%2 != 0?len(s+=" "):len(s));
+		      cur = infoX(s);
+		      arr = s.toCharArray();
+		      if(a >= cur && a < cur+l/2) {                                      sb.append(arr[a-cur+m++]);                                      sb.append(arr[a-cur+m]);                                     }                                                               else sb.append("  ");                                        }
+		   else if(i == HEIGHT/2 + 4) {
+		      s = "  " + String.valueOf(score);
+		      l = (len(s)%2 != 0?len(s+=" "):len(s));
+		      cur = infoX(s);
+		      arr = s.toCharArray();
+		      if(a >= cur && a < cur+l/2) {
+			 sb.append(arr[a-cur+m++]);
+			 sb.append(arr[a-cur+m]);
+		      } else sb.append("  ");
+		   } else sb.append("  ");
+		} else sb.append("  ");
 	    }
 	    sb.append("\n");
        }
+       sb.append("Use 'A' to move left and 'L' to move right ");
+       sb.append(collisions.size());
        return sb.toString();
+   }
+
+   void readInput() {
+	switch (ReadInput.input) {
+	    case 'A':
+	    case 'a':
+		if(pauseGame) pauseGame = false;                                if(!gameOver && !pauseGame) {
+		   if(player.x > 1 ) player.x--;
+		   if(player.x % 6 == 0) player.x--;
+		}
+		break;
+	    case 'l':
+	    case 'L':
+		if(pauseGame) pauseGame = false;
+		if(!gameOver && !pauseGame) { 
+		   if(player.x < divider-1) player.x++;
+		   if(player.x % 6 == 0) player.x++;
+		}
+		break;
+	    case 'p':
+	    case 'P':
+		pauseGame = !pauseGame;
+		break;
+	    case 'R':
+	    case 'r':
+		break;
+	    case 'y':
+		life--;
+		break;
+	    case 'q':
+	    case 'Q':
+		gameLoop.cancel();
+		ReadInput.end();
+		System.gc();
+		System.exit(0);
+		break;
+
+	}
+	ReadInput.input = ' ';
    }
 
    void changeSpeed() {
@@ -65,22 +149,46 @@ public class CarCrash {
         gameLoop.scheduleAtFixedRate(new TimerTask() {
             @Override
                 public void run() {
-		    if(WIDTH != ReadInput.width()) {
-			WIDTH = ReadInput.width();
+		    readInput();
+		    if(HEIGHT != ReadInput.height()) {
+			clear();
+			WIDTH = ReadInput.width()/2;
 			HEIGHT = ReadInput.height();
-			divider = (WIDTH/3)*2 - 5;
+			divider = (WIDTH/3)*2 - 2;
+			System.out.print("\033[H");
+                        System.out.flush();
+                        System.out.print(getBoard());
 			pauseGame = true;
 		    }
 		    if(!pauseGame && !gameOver) {
 			System.out.print("\033[H");
-                        System.out.flush();                                             System.out.print(getBoard());
+                        System.out.flush();
+			max++;
+			if (max == 30) {
+			   addEnemies();
+			   max = 0;
+			}
+			move();
+			System.out.print(getBoard());
 		    }
 		}
 	},0,repeatTime);
     }
 
-    void updateScreen() {
-	
+    void move() {
+	for(Entity e: collisions) {
+	    e.move();
+	    e.reset(HEIGHT, divider);
+	}
+    }
+
+    void addEnemies() {
+	for(int q=0; q < 8; q++) {
+            collisions.add(new Entity(                                          rand.nextInt(1,divider),
+                rand.nextInt(HEIGHT/2, HEIGHT),
+		enemies[rand.nextInt(0,enemies.length)]));
+	    if(collisions.get(q).x % 6 == 0)                                   collisions.get(q).x--;
+	}
     }
 
     void clear(){
@@ -92,7 +200,7 @@ public class CarCrash {
 
     private int infoX(String info) {
 	int x = (WIDTH - 1 - divider);
-	return divider + x/2 - len(info)/2;
+	return divider + x/2 - len(info)/4;
     }
 
     private int len(String i) {
@@ -106,7 +214,8 @@ public class CarCrash {
 
 /**                                                              * ReadInput handles keyboard input from the terminal in a separ
 ate thread.
- */                                                             class ReadInput {                                                   static Thread thread;                                           static Terminal terminal;
+ */
+class ReadInput {                                                   static Thread thread;                                           static Terminal terminal;
     static volatile char input;                                     static volatile boolean run = true;
 
     /**                                                              * Starts the input thread and initializes the terminal.
@@ -154,3 +263,28 @@ ate thread.
         try {                                                               w = terminal.getWidth();                                    } catch (Exception n) {}                                        return w;
     }
 }
+
+public class Entity {
+    int x, y;
+    String n;
+    Random rand = new Random();
+
+    public Entity(int x, int y, String n) {
+        this.x = x;
+        this.y = y;
+        this.n = n;
+    }
+
+    void move() {
+        y--;
+    }
+
+    void reset(int p, int divider) {
+        if (y < 1) {
+            y = rand.nextInt(p/2, p);
+            x = rand.nextInt(1, divider);
+            if (x % 6 == 0) x++;
+        }
+    }
+}
+
