@@ -9,7 +9,7 @@ public class CarCrash {
    private Timer gameLoop;
    private final Random rand = new Random();
    private int repeatTime = 400;
-   private int score,life,divider,max;
+   private int score,life,divider,max,frameCounter;
    private int HEIGHT,WIDTH;
    private boolean pauseGame,gameOver;
    private Entity player;
@@ -42,13 +42,22 @@ public class CarCrash {
                 if(i == 0 || i == HEIGHT - 1)
 		   sb.append("\u001B[35m##");
 		else if(a == 0 || a == WIDTH-1)
-		   sb.append("\u001B[35m##");
+		   sb.append("\u001B[95m##");
 		else if(player.x == a && player.y == i)
 		   sb.append(player.n);
 		else if(a == divider)
 		   sb.append("\u001B[35m🚧");
-		else if(a % 6 == 0 && a < divider)
-                   sb.append("\u001B[37m||");
+		else if (a % 6 == 0 && a < divider) {
+		   int offset = (i + frameCounter / 2) % 5;;
+
+		   if(offset == 0 || offset == 6) 
+		      sb.append("\u001B[97m||"); // Bright
+		   else if (offset == 1 || offset == 7|| offset == 11)
+		      sb.append("\u001B[37m::"); // Medium
+		   else if (offset == 2 || offset == 8 || offset == 10)
+		      sb.append("\u001B[90m.."); // Dim
+		   else sb.append("  "); // invisible/faded
+		}
 		else if(a < divider) {
 		   boolean drawn = false;
 		   for(Entity e : collisions) {
@@ -108,14 +117,19 @@ public class CarCrash {
 	switch (ReadInput.input) {
 	    case 'A':
 	    case 'a':
-		if(pauseGame) pauseGame = false;                                if(!gameOver && !pauseGame) {
+		if(pauseGame) {
+		   if(!player.n.equals("🚘")) player.n = "🚘";
+		   pauseGame = false;
+		}
+		if(!gameOver && !pauseGame) {
 		   if(player.x > 1 ) player.x--;
 		   if(player.x % 6 == 0) player.x--;
 		}
 		break;
 	    case 'l':
 	    case 'L':
-		if(pauseGame) pauseGame = false;
+		if(pauseGame) {
+                   if(!player.n.equals("🚘")) player.n = "🚘";                     pauseGame = false;                                           }
 		if(!gameOver && !pauseGame) { 
 		   if(player.x < divider-1) player.x++;
 		   if(player.x % 6 == 0) player.x++;
@@ -123,13 +137,11 @@ public class CarCrash {
 		break;
 	    case 'p':
 	    case 'P':
+		if(!player.n.equals("🚘")) player.n = "🚘";
 		pauseGame = !pauseGame;
 		break;
 	    case 'R':
 	    case 'r':
-		break;
-	    case 'y':
-		life--;
 		break;
 	    case 'q':
 	    case 'Q':
@@ -164,9 +176,10 @@ public class CarCrash {
 			System.out.print("\033[H");
                         System.out.flush();
 			max++;
-			if (max == 30) {
+			frameCounter++;
+			if (max == repeatTime/8) {
 			   addEnemies();
-			   max = 0;
+			   max = frameCounter = 0;
 			}
 			move();
 			System.out.print(getBoard());
@@ -178,6 +191,13 @@ public class CarCrash {
     void move() {
 	for(Entity e: collisions) {
 	    e.move();
+	    if(e.y < 1) score++;
+	    if(e.x == player.x && e.y == player.y) {
+		life--;
+		player.n = "💥";
+		pauseGame = true;
+		return;
+	    }
 	    e.reset(HEIGHT, divider);
 	}
     }
