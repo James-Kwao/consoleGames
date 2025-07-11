@@ -13,7 +13,7 @@ public class CarCrash {
    private int HEIGHT,WIDTH;
    private boolean pauseGame,gameOver;
    private Entity player;
-   private ArrayList<Entity> collisions = new ArrayList<>();
+   private ArrayList<Entity> collisions;
    private char direction;
    private String[] enemies = {"🐃","🐏","🐌","🐢","🦆","🦔","🐓","🐫","🐘","🐥","🦍","🦌"};
 
@@ -21,11 +21,13 @@ public class CarCrash {
 	ReadInput.start();
 	clear();
 
+	collisions = new ArrayList<>();
 	HEIGHT = ReadInput.height();
 	WIDTH = ReadInput.width()/2;
 	divider = (WIDTH/3)*2 - 2;
 	player = new Entity(rand.nextInt(1, divider), 1 ,"🚘");
 	if(player.x % 6 == 0) player.x++;
+	score = max = frameCounter = 0;
 	life = 3;
 
 	addEnemies();
@@ -182,7 +184,11 @@ public class CarCrash {
 			   max = frameCounter = 0;
 			}
 			move();
+			if(gameOver) return;
 			System.out.print(getBoard());
+		    }
+		    else if (gameOver) {
+
 		    }
 		}
 	},0,repeatTime);
@@ -194,8 +200,18 @@ public class CarCrash {
 	    if(e.y < 1) score++;
 	    if(e.x == player.x && e.y == player.y) {
 		life--;
-		player.n = "💥";
-		pauseGame = true;
+		if(life == 0) {
+                   gameOver = true;
+                   gameOverSequence("");
+                } else {
+		    player.n = "💥";
+		    pauseGame = true;
+		    gameOverSequence("Crashed into\n" + e.n);
+		    try{Thread.sleep(1700);}catch(Exception o){}
+		    clear();
+		    System.out.print("\033[H");
+		    System.out.flush();
+		}
 		return;
 	    }
 	    e.reset(HEIGHT, divider);
@@ -227,9 +243,23 @@ public class CarCrash {
 	return i.length();
     }
 
-    public static void main(String... args) {
-       new CarCrash();
-   }
+    void gameOverSequence(String reason) {
+        String over = gameOver ? "G AM E\nOV ER\nYour Score:  " + String.valueOf(score) : reason;
+        clear();
+        try{
+            Process process = Runtime.getRuntime()
+                .exec(new String[] {
+                        "figlet","-ctf","slant", over});
+            java.util.Scanner s = new java.util
+                    .Scanner(process.getInputStream())
+                    .useDelimiter("\\A");
+
+            if(gameOver)System.out.print("\u001B[31m");
+            System.out.println(s.hasNext()?s.next():"");
+        } catch (Exception e) {}
+    }
+
+    public static void main(String... args) { new CarCrash();}
 }
 
 /**                                                              * ReadInput handles keyboard input from the terminal in a separ
