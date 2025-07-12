@@ -8,7 +8,7 @@ import org.jline.reader.*;
 public class CarCrash {
    private Timer gameLoop;
    private final Random rand = new Random();
-   private int repeatTime = 400;
+   private int repeatTime;
    private int score,life,divider,max,frameCounter;
    private int HEIGHT,WIDTH;
    private boolean pauseGame,gameOver;
@@ -20,19 +20,23 @@ public class CarCrash {
    public CarCrash() {
 	ReadInput.start();
 	clear();
-
-	collisions = new ArrayList<>();
-	HEIGHT = ReadInput.height();
-	WIDTH = ReadInput.width()/2;
-	divider = (WIDTH/3)*2 - 2;
-	player = new Entity(rand.nextInt(1, divider), 1 ,"🚘");
-	if(player.x % 6 == 0) player.x++;
 	score = max = frameCounter = 0;
-	life = 3;
+        life = 3;
 
-	addEnemies();
-	ReadInput.input = ' ';
+	start();
 	changeSpeed();
+   }
+
+   void start() {
+	collisions = new ArrayList<>();
+        HEIGHT = ReadInput.height();
+        WIDTH = ReadInput.width()/2;                                    divider = (WIDTH/3)*2 - 2;
+	pauseGame = gameOver = false;
+	player = new Entity(rand.nextInt(1, divider), 1 ,"🚘");         if(player.x % 6 == 0) player.x++;                               max = frameCounter = 0;
+	repeatTime = 300;
+
+        addEnemies();
+        ReadInput.input = ' ';
    }
 
    private String getBoard() {
@@ -52,9 +56,9 @@ public class CarCrash {
 		else if (a % 6 == 0 && a < divider) {
 		   int offset = (i + frameCounter / 2) % 5;;
 
-		   if(offset == 0 || offset == 6) 
+		    if(offset == 0 || offset == 6 || offset == 9) 
 		      sb.append("\u001B[97m||"); // Bright
-		   else if (offset == 1 || offset == 7|| offset == 11)
+		   else if (offset == 1 || offset == 7 || offset == 11)
 		      sb.append("\u001B[37m::"); // Medium
 		   else if (offset == 2 || offset == 8 || offset == 10)
 		      sb.append("\u001B[90m.."); // Dim
@@ -144,12 +148,16 @@ public class CarCrash {
 		break;
 	    case 'R':
 	    case 'r':
+		clear();
+		score = max = frameCounter = 0;                                 life = 3;
+		start();
 		break;
 	    case 'q':
 	    case 'Q':
 		gameLoop.cancel();
 		ReadInput.end();
 		System.gc();
+		System.out.println();
 		System.exit(0);
 		break;
 
@@ -184,7 +192,11 @@ public class CarCrash {
 			   max = frameCounter = 0;
 			}
 			move();
-			if(gameOver) return;
+			if(gameOver) {
+			   score = max = frameCounter = 0;                                 repeatTime = 300;
+			   life = 3;
+			   return;
+			}
 			System.out.print(getBoard());
 		    }
 		    else if (gameOver) {
@@ -203,14 +215,15 @@ public class CarCrash {
 		if(life == 0) {
                    gameOver = true;
                    gameOverSequence("");
+		   System.out.print("\u001B[36mEnter 'R' to restart or 'Q' to quit: ");
                 } else {
 		    player.n = "💥";
-		    pauseGame = true;
-		    gameOverSequence("Crashed into\n" + e.n);
-		    try{Thread.sleep(1700);}catch(Exception o){}
+		    gameOverSequence("Crashed into an amimal");
+		    try{Thread.sleep(repeatTime * 2);
+		    }catch(Exception o){}
 		    clear();
-		    System.out.print("\033[H");
-		    System.out.flush();
+		    start();
+		    pauseGame = true;
 		}
 		return;
 	    }
@@ -256,7 +269,9 @@ public class CarCrash {
 
             if(gameOver)System.out.print("\u001B[31m");
             System.out.println(s.hasNext()?s.next():"");
-        } catch (Exception e) {}
+        }catch (Exception e) {
+	    System.out.println(gameOver);
+	}
     }
 
     public static void main(String... args) { new CarCrash();}
