@@ -24,6 +24,8 @@ public class CarCrash {
         life = 3;
 
 	start();
+	player = new Entity(rand.nextInt(1, divider), 1 ,"🚘");
+	if(player.x % 6 == 0) player.x++;
 	changeSpeed();
    }
 
@@ -32,7 +34,7 @@ public class CarCrash {
         HEIGHT = ReadInput.height();
         WIDTH = ReadInput.width()/2;                                    divider = (WIDTH/3)*2 - 2;
 	pauseGame = gameOver = false;
-	player = new Entity(rand.nextInt(1, divider), 1 ,"🚘");         if(player.x % 6 == 0) player.x++;                               max = frameCounter = 0;
+	max = frameCounter = 0;
 	repeatTime = 300;
 
         addEnemies();
@@ -115,7 +117,6 @@ public class CarCrash {
 	    sb.append("\n");
        }
        sb.append("Use 'A' to move left and 'L' to move right ");
-       sb.append(collisions.size());
        return sb.toString();
    }
 
@@ -150,6 +151,8 @@ public class CarCrash {
 	    case 'r':
 		clear();
 		score = max = frameCounter = 0;                                 life = 3;
+		player = new Entity(rand.nextInt(1, divider), 1 ,"🚘");
+		if(player.x % 6 == 0) player.x++;
 		start();
 		break;
 	    case 'q':
@@ -199,9 +202,6 @@ public class CarCrash {
 			}
 			System.out.print(getBoard());
 		    }
-		    else if (gameOver) {
-
-		    }
 		}
 	},0,repeatTime);
     }
@@ -219,6 +219,8 @@ public class CarCrash {
                 } else {
 		    player.n = "💥";
 		    gameOverSequence("Crashed into an amimal");
+		    for(int a=0; a<WIDTH; a++)
+			System.out.print(e.n);
 		    try{Thread.sleep(repeatTime * 2);
 		    }catch(Exception o){}
 		    clear();
