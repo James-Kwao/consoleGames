@@ -54,6 +54,16 @@ _Replace `GameName.java` with the actual file name of the game you want to play 
     <img src="SnakeGame/preview/snakeGame3.jpg" alt="Screenshot 3" width="250"/>
     <img src="SnakeGame/preview/snakeGame4.jpg" alt="Screenshot 4" width="250"/>
 </div>
+
+---
+
+- ## [CarCrash Game](https://github.com/James-Kwao/consoleGames/tree/master/CarCrash)
+<div style="display: flex; gap: 10px;">
+    <img src="CarCrash/preview/cargame1.jpg" alt="Screenshot 1" width="250"/>
+    <img src="CarCrash/preview/cargame2.jpg" alt="Screenshot 2" width="250"/>
+    <img src="CarCrash/preview/cargame3.jpg" alt="Screenshot 3" width="250"/>
+</div>
+
 - _...and more coming soon!_
 
 ## Contributing
