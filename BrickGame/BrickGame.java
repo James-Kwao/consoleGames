@@ -91,11 +91,9 @@ public class BrickGame {
         String l = "";
         for (int i = 0; i < HEIGHT; i++) {
             if (i == 0 && !gameOver) {
-                l = "  ";
-                for (int d = 0; d < life; d++)
-                    l += "💙";
-                sb.append(l);
-                l = "\u001B[34m\t\t\t\t   Your Score:" + score;
+                l = " 💙 × "+life;
+                sb.append("\u001B[34m").append(l);
+                l = "\t\t\t\t   Your Score:" + score;
                 sb.append(l);
                 sb.append("\n");
             }
