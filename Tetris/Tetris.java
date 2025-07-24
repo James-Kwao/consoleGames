@@ -10,9 +10,8 @@ public class Tetris {
     final String dividerColor = new Color(160, 82, 45).color;
     int WIDTH, HEIGHT;
     char[][] gameArea;
-    int[][] temp;
     Timer timer;
-    int repeat, divider, d, u;
+    int repeat, divider, d;
     Mino curMino;
 
     public Tetris() {
@@ -27,13 +26,13 @@ public class Tetris {
     void initialize() {
 	WIDTH = ReadInput.width();
 	HEIGHT = ReadInput.height();
-	divider = (WIDTH/3)*2 - 2;
+	divider = (WIDTH/2) - 4;
 
 	gameArea = new char[HEIGHT - 2][divider - 1];
 	initGameArea();
 
 	ReadInput.input = ' ';
-	repeat = 200;
+	repeat = 400;
     }
 
     String getBoard() {
@@ -45,7 +44,7 @@ public class Tetris {
 		  sb.append(frameColor + (char) 9618);
 	      else if(b == 0 || b == WIDTH -1)
 		  sb.append(frameColor + (char) 9618);
-	      else if(b == divider) 
+	      else if(b >= divider && b <= divider + 8) 
 		  sb.append(frameColor + (char) 9612);
 	      else if(a == HEIGHT/3 && b > divider)
 		  sb.append(dividerColor + (char) 9612);
@@ -107,7 +106,7 @@ public class Tetris {
 	    case 5: curMino = new Mino_Z2(); break;
 	    case 6: curMino = new Mino_S(); break;
 	}
-	curMino = new Mino_B();
+	
 	switch(curMino.type) {
             case 'z':
 	    case 'Z':
@@ -150,7 +149,6 @@ public class Tetris {
     }
 
     void shiftDown(int fromRow) {
-	u = fromRow;
 	for(int row = fromRow; row > 0; row--)
 	    for(int col = 0; col < gameArea[0].length; col++) 
 		gameArea[row][col] = gameArea[row - 1][col];
@@ -171,6 +169,7 @@ public class Tetris {
 			    initialize();
 			    clear();
 			}
+		    move(1);
 		    input();
 		    if(hasLanded()) {
 			lockMino();
@@ -211,14 +210,7 @@ public class Tetris {
 		break;
 	    case 'v':
 	    case 'V':
-		for(Block b : curMino.blk) {
-		    if(b.y < HEIGHT - 2) valid = true;
-		    else {
-			valid = false;
-			break;
-		    }
-		}
-		if(valid) curMino.move(0,1);
+		move(1);
 		break;
 	    case 'y':
 	    case 'Y':
@@ -251,13 +243,24 @@ public class Tetris {
 	    case 'R':
 		break;
 	}
-	valid = false;
-	ReadInput.input = 'v';
+	ReadInput.input = ' ';
     }
 
     void initGameArea() {
 	for(int a=0; a<gameArea.length; a++)
 	    Arrays.fill(gameArea[a], ' ');
+    }
+
+    void move(int y) {
+	boolean valid = false;
+	for(Block b : curMino.blk) {
+	    if(b.y < HEIGHT - 2) valid = true;
+	    else {
+		valid = false;
+		break;
+	    }
+	}
+	if(valid) curMino.move(0,y);
     }
 
     void clear() {
