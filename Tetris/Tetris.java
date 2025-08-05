@@ -11,14 +11,23 @@ public class Tetris {
     int WIDTH, HEIGHT;
     char[][] gameArea;
     Timer timer;
-    int repeat, divider, d;
-    Mino curMino;
+    int repeat, divider, d, midX, midY;
+    Mino curMino, nxtMino;
 
     public Tetris() {
 	ReadInput.start();
 	clear();
 	initialize();
 	spawnNewMino();
+	setType();
+	curMino = nxtMino;
+	curMino.setXY(divider/2, 2, d);
+
+	spawnNewMino();
+        setType();
+	midX = (WIDTH - divider - 8)/2 + divider + 8;
+	midY = (HEIGHT - (HEIGHT/3 * 2))/2 + HEIGHT/3 * 2;
+	nxtMino.setXY(midX, midY, d);
 	System.out.print(getBoard());
 	gameLoop();
     }
@@ -70,13 +79,24 @@ public class Tetris {
 		     }
 		  }
 	      }
+	      else if(b > divider + 8) {
+		boolean draw = true;
+		for(Block q : nxtMino.blk) 
+		   if(q.y == a && q.x == b) {
+			sb.append(q.c.color);
+			sb.append(q.block);
+			draw = false;
+			break;
+		   }
+		if(draw) sb.append(" ");
+	      }
 	      else sb.append(" ");
 	   }
 	   sb.append("\n");
 	}
 	sb.append(textColor);
 	sb.append("Moves A(Left), L(Right), V(Down), Y(Rotate), Q(Quit), R(Restart) ");
-	sb.append(gameArea.length+"\t"+HEIGHT);
+	sb.append((divider+8)+"\t"+HEIGHT);
 	return sb.toString();
     }
 
@@ -98,31 +118,27 @@ public class Tetris {
 
     void spawnNewMino() {
 	switch (new Random().nextInt(7)) {
-	    case 0: curMino = new Mino_L1(); break;
-	    case 1: curMino = new Mino_L2(); break;
-	    case 2: curMino = new Mino_T(); break;
-	    case 3: curMino = new Mino_B(); break;
-	    case 4: curMino = new Mino_Z1(); break;
-	    case 5: curMino = new Mino_Z2(); break;
-	    case 6: curMino = new Mino_S(); break;
+	    case 0: nxtMino = new Mino_L1(); break;
+	    case 1: nxtMino = new Mino_L2(); break;
+	    case 2: nxtMino = new Mino_T(); break;
+	    case 3: nxtMino = new Mino_B(); break;
+	    case 4: nxtMino = new Mino_Z1(); break;
+	    case 5: nxtMino = new Mino_Z2(); break;
+	    case 6: nxtMino = new Mino_S(); break;
 	}
-	
-	switch(curMino.type) {
-            case 'z':
-	    case 'Z':
-	    case 'B': d = new Random().nextInt(1, 3); break;
-	    case 'T':
-	    case 'L':
-	    case 'l': d = new Random().nextInt(1, 5); break;
-	}
-	curMino.setXY(divider/2, 2, d);
+    }
 
-	for(Block b : curMino.blk) {
-	    if(gameArea[b.y - 1][b.x - 1] != ' ') {
-		gameOver = true;
-		exitGame();
+    void setType() {
+	switch(nxtMino.type) {
+            case 'z':                                                       case 'Z':                                                       case 'B': d = new Random().nextInt(1, 3); break;                case 'T':                                                       case 'L':                                                       case 'l': d = new Random().nextInt(1, 5); break;            }
+    }
+
+    void gameOver() {
+	for(Block b : curMino.blk)
+            if(gameArea[b.y - 1][b.x - 1] != ' ') {
+                gameOver = true;
+                exitGame();
 	    }
-	}
     }
 
     void checkCompletedLines() {
@@ -154,7 +170,7 @@ public class Tetris {
 		gameArea[row][col] = gameArea[row - 1][col];
 
 	for(int col = 0; col < gameArea[0].length; col++)
-	    gameArea[fromRow][col] = ' ';
+	    gameArea[0][col] = ' ';
     }
 
     void gameLoop() {
@@ -167,6 +183,10 @@ public class Tetris {
 		    if(HEIGHT != ReadInput.height() 
 			|| WIDTH != ReadInput.width()) { 
 			    initialize();
+			    midX = (WIDTH - divider - 8)/2 +
+				divider + 8;
+			    midY = (HEIGHT - (HEIGHT/3 * 2))/2 
+				+ HEIGHT/3 * 2;
 			    clear();
 			}
 		    move(1);
@@ -174,7 +194,9 @@ public class Tetris {
 		    if(hasLanded()) {
 			lockMino();
 			checkCompletedLines();
-			spawnNewMino();
+
+			curMino = nxtMino;                                              curMino.setXY(divider/2, 2, d);                                                                                                 spawnNewMino();                                                 setType();
+			nxtMino.setXY(midX, midY, d);
 		    }
 
 		    System.out.print(getBoard());
@@ -281,7 +303,7 @@ public class Tetris {
 	System.exit(0);
     }
 
-     public static void main(String... args) {
+    public static void main(String... args) {
 	new Tetris();
     }
 }
